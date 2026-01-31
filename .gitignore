@@ -1,26 +1,25 @@
-# Python
+# ---- Python ----
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
 
-# Virtual environment
+# ---- Virtual Environment ----
 venv/
 venv310/
-venv311/
-
-# Environment variables
 .env
+.env.*
 
-# Streamlit
-.streamlit/
+# ---- Streamlit ----
+.streamlit/secrets.toml
 
-# OS files
+# ---- OS files ----
 .DS_Store
+Thumbs.db
 
-# IDE
+# ---- IDE / Editor ----
 .vscode/
 .idea/
 
-# Logs
+# ---- Logs ----
 *.log

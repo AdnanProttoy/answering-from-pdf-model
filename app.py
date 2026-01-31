@@ -1,68 +1,63 @@
-with open("data.txt", "r") as f:
-    documents = [line.strip() for line in f if line.strip()]
+import streamlit as st
+import openai
 
-from sentence_transformers import SentenceTransformer
-import torch
-from torch.nn.functional import normalize
+from pdf_loader import load_pdf
+from text_splitter import split_text
+from embeddings import create_vector_store
+from retriever import retrieve_chunks
 
-embed_model = SentenceTransformer("all-MiniLM-L6-v2")
-doc_embeddings = embed_model.encode(documents, convert_to_tensor=True)
-doc_embeddings = normalize(doc_embeddings, p=2, dim=1)
+# OpenAI API key will be picked up from environment variable
+openai.api_key = st.secrets["OPENAI_API_KEY"] if "OPENAI_API_KEY" in st.secrets else None
 
-import os
-from openai import OpenAI
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+st.set_page_config(page_title="AI Document Agent")
+st.title("📄 AI Agent for Documents")
 
-while True:
-    query = input("\nAsk a question (or type 'exit'): ")
-    if query.lower() == "exit":
-        print("Goodbye!")
-        break
+uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
 
-    query_embedding = embed_model.encode([query], convert_to_tensor=True)
-    query_embedding = normalize(query_embedding, p=2, dim=1)
+if uploaded_file:
+    with st.spinner("Reading PDF..."):
+        text = load_pdf(uploaded_file)
+        chunks = split_text(text)
+        index, _ = create_vector_store(chunks)
+    st.success("PDF processed successfully!")
 
-    from torch.nn.functional import cosine_similarity
-    scores = cosine_similarity(query_embedding, doc_embeddings).squeeze(0)
+    question = st.text_input("Ask a question from the document")
 
-    top_k = min(3, len(documents))
-    top_scores, top_indices = torch.topk(scores, k=top_k)
+    if question:
+        relevant_chunks = retrieve_chunks(question, chunks, index)
+        context = "\n".join(relevant_chunks)
 
-    threshold = 0.3
-    retrieved_docs = [
-        documents[idx] for idx, score in zip(top_indices, top_scores) if score >= threshold
-    ]
+        prompt = f"""
+        Answer the question using ONLY the context below.
+        If the answer is not present, say "Not found in document."
 
-    if not retrieved_docs:
-        print("\nAnswer not found in documents.")
-        continue
+        Context:
+        {context}
 
-    retrieved_context = "\n".join(retrieved_docs)
+        Question:
+        {question}
+        """
 
-    prompt = f"""
-You are a strict assistant.
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
 
-Answer ONLY from the context below.
-If the answer is not present, say:
-"I don't know based on the provided documents."
+        st.subheader("Answer")
+        st.write(response["choices"][0]["message"]["content"])
 
-Context:
-{retrieved_context}
+    if st.button("Generate Summary"):
+        prompt = f"""
+        Create a professional summary using ONLY the content below.
 
-Question:
-{query}
+        Content:
+        {text}
+        """
 
-Answer (max 3 sentences):
-"""
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3
-    )
-
-    answer = response.choices[0].message.content
-    print("ANSWER")
-    print(answer)
-
-
+        st.subheader("Summary")
+        st.write(response["choices"][0]["message"]["content"])

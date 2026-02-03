@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # RAG Document Question Answering (QA) App
 
 This project demonstrates a **Retrieval-Augmented Generation (RAG)** system using Python.  
@@ -17,3 +18,7 @@ Features
 ```bash
 git clone https://github.com/AdnanProttoy/rag-document-qa.git
 cd rag-document-qa
+=======
+# rag-document-qa
+# rag-document-qa
+>>>>>>> 0f85f3e (first commit)

@@ -3,7 +3,7 @@ import faiss
 import numpy as np
 
 # Load the model once
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = SentenceTransformer("paraphrase-MiniLM-L3-v2")
 
 def create_vector_store(chunks):
     """

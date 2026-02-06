@@ -1,13 +1,16 @@
-<<<<<<< HEAD
-# ---- Python ----
+# ---- Virtual environments ----
+venv/
+venv310/
+venv311/
+
+# ---- Python cache ----
 __pycache__/
 *.py[cod]
+*.pyc
 *.pyo
 *.pyd
 
-# ---- Virtual Environment ----
-venv/
-venv310/
+# ---- Secrets ----
 .env
 .env.*
 
@@ -24,19 +27,3 @@ Thumbs.db
 
 # ---- Logs ----
 *.log
-=======
-# Virtual environments
-venv/
-venv310/
-venv311/
-
-# Python cache
-__pycache__/
-*.pyc
-
-# Secrets
-.env
-
-# macOS
-.DS_Store
->>>>>>> 546c7af (Add .gitignore and remove venv)

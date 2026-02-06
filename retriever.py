@@ -1,24 +1,20 @@
-<<<<<<< HEAD
 import numpy as np
-
-def retrieve_chunks(question, chunks, index, embeddings, top_k=3):
-    from sentence_transformers import SentenceTransformer
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    query_embedding = model.encode([question])
-    D, I = index.search(np.array(query_embedding), top_k)
-    return [chunks[i] for i in I[0]]
-=======
 from sentence_transformers import SentenceTransformer
-import numpy as np
 
+# Load the model once globally
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-def retrieve_chunks(question, chunks, index, k=3):
-    q_embedding = model.encode([question])
-    q_embedding = np.array(q_embedding).astype("float32")
+def retrieve_chunks(question, chunks, index, top_k=3):
+    """
+    Retrieve the most relevant text chunks from an index given a question.
+    """
+    # Encode the question
+    query_embedding = model.encode([question])
+    query_embedding = np.array(query_embedding).astype("float32")
 
-    distances, indices = index.search(q_embedding, k)
+    # Search in the vector index
+    distances, indices = index.search(query_embedding, top_k)
 
+    # Return the top relevant chunks
     results = [chunks[i] for i in indices[0]]
     return results
->>>>>>> 546c7af (Add .gitignore and remove venv)

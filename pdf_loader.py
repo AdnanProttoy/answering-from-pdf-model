@@ -1,16 +1,9 @@
-<<<<<<< HEAD
-from PyPDF2 import PdfReader
-=======
-from pypdf import PdfReader
->>>>>>> 546c7af (Add .gitignore and remove venv)
+# pdf_loader.py
+from pypdf import PdfReader  # using pypdf instead of PyPDF2
 
 def load_pdf(file):
     reader = PdfReader(file)
     text = ""
     for page in reader.pages:
-<<<<<<< HEAD
-        text += page.extract_text() + "\n"
-=======
-        text += page.extract_text()
->>>>>>> 546c7af (Add .gitignore and remove venv)
+        text += page.extract_text() + "\n"  # keep line breaks between pages
     return text

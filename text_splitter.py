@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-def split_text(text, chunk_size=500):
-    words = text.split()
-    chunks = []
-    for i in range(0, len(words), chunk_size):
-        chunks.append(" ".join(words[i:i+chunk_size]))
-=======
 def split_text(text, chunk_size=500, overlap=50):
+    """
+    Split the text into chunks of size `chunk_size` with optional `overlap`.
+    """
     words = text.split()
     chunks = []
 
@@ -14,7 +10,6 @@ def split_text(text, chunk_size=500, overlap=50):
         end = start + chunk_size
         chunk = words[start:end]
         chunks.append(" ".join(chunk))
-        start = end - overlap
+        start = end - overlap  # move start by chunk_size - overlap
 
->>>>>>> 546c7af (Add .gitignore and remove venv)
     return chunks

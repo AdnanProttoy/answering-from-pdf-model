@@ -2,23 +2,19 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 
-<<<<<<< HEAD
-model = SentenceTransformer('all-MiniLM-L6-v2')
-
-def create_vector_store(chunks):
-    embeddings = model.encode(chunks, convert_to_numpy=True)
-    dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)
-    index.add(embeddings)
-=======
+# Load the model once
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 def create_vector_store(chunks):
+    """
+    Convert text chunks to embeddings and create a FAISS vector store.
+    """
+    # Encode chunks to embeddings and convert to float32
     embeddings = model.encode(chunks)
     embeddings = np.array(embeddings).astype("float32")
 
+    # Create FAISS index
     index = faiss.IndexFlatL2(embeddings.shape[1])
     index.add(embeddings)
 
->>>>>>> 546c7af (Add .gitignore and remove venv)
     return index, embeddings

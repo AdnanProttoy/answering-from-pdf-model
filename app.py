@@ -13,7 +13,7 @@ client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 # Streamlit page setup
 st.set_page_config(page_title="AI Document Agent")
-st.title("📄 AI Agent for Documents")
+st.title("Answering From pdf App Designed By PROTTOY")
 
 # Upload PDF
 uploaded_file = st.file_uploader("Upload a PDF", type="pdf")

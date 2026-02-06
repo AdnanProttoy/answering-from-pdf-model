@@ -2,6 +2,6 @@ streamlit
 openai>=1.0.0
 pypdf
 sentence-transformers
-faiss-cpu
+torch
 numpy
 python-dotenv
